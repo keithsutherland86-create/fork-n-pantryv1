@@ -1,0 +1,60 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap');
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  height: 100%;
+  overscroll-behavior: none;
+}
+
+:root {
+  --linen:    #F5F0E8;
+  --cream:    #FDFAF4;
+  --walnut:   #8B5E3C;
+  --walnut-dk:#6B4528;
+  --moss:     #5C7A4E;
+  --moss-lt:  #7A9E6A;
+  --forest:   #2D4A2D;
+  --bark:     #C4A882;
+  --bark-lt:  #E8DCC8;
+  --ink:      #1E2A1E;
+  --mist:     #9BAE8F;
+  --shadow:   rgba(45, 30, 15, 0.10);
+}
+
+body {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  background: var(--linen);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Woodgrain texture overlay via CSS — diagonal streaks */
+.wood-header {
+  background:
+    repeating-linear-gradient(
+      92deg,
+      transparent,
+      transparent 18px,
+      rgba(255,255,255,0.03) 18px,
+      rgba(255,255,255,0.03) 19px
+    ),
+    repeating-linear-gradient(
+      88deg,
+      transparent,
+      transparent 40px,
+      rgba(0,0,0,0.04) 40px,
+      rgba(0,0,0,0.04) 41px
+    ),
+    linear-gradient(180deg, #3D2810 0%, #4A3318 40%, #3A2510 100%);
+}
+
+.display { font-family: 'Playfair Display', Georgia, serif; }
+
+button { font-family: inherit; }
+input, textarea { font-family: inherit; }
