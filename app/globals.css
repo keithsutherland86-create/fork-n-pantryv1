@@ -1,72 +1,127 @@
-@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=DM+Sans:wght@300;400;500;600;700&display=swap');
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-html, body { height: 100%; overscroll-behavior: none; }
 
 :root {
-  --forest:    #1A2E1E;
-  --forest-2:  #243529;
-  --moss:      #3A5E42;
-  --sage:      #72A67A;
-  --sage-lt:   #B2CEB6;
-  --sage-pale: #EBF3EC;
-  --cream:     #FDFCF8;
-  --linen:     #F7F3EC;
-  --parchment: #EDE6D4;
-  --bark:      #9C7248;
-  --bark-lt:   #D4B896;
-  --ink:       #1A2B1E;
-  --mist:      #8A9E8C;
-  --white:     #FFFFFF;
-  --red:       #E53935;
-  --amber:     #F59E0B;
-  --blue:      #3B82F6;
+  /* Brand greens */
+  --forest:      #1A3028;
+  --pine:        #2D5441;
+  --sage:        #4A7A5E;
+  --mint:        #7AB89A;
+  --mist:        #C8DDD3;
+  --sage-pale:   #EAF2EE;
 
-  --sh-xs: 0 1px 3px rgba(26,46,30,.07);
-  --sh-sm: 0 2px 8px rgba(26,46,30,.09), 0 1px 3px rgba(26,46,30,.06);
-  --sh-md: 0 6px 20px rgba(26,46,30,.12), 0 2px 6px rgba(26,46,30,.08);
-  --sh-lg: 0 12px 40px rgba(26,46,30,.16), 0 4px 12px rgba(26,46,30,.10);
-  --sh-xl: 0 20px 60px rgba(26,46,30,.20), 0 6px 20px rgba(26,46,30,.12);
-  --inset: inset 0 1px 3px rgba(26,46,30,.08);
+  /* Neutrals */
+  --ink:         #111827;
+  --charcoal:    #374151;
+  --dust:        #6B7280;
+  --silver:      #9CA3AF;
+  --whisper:     #F3F4F6;
+  --cream:       #FDFCFA;
+  --parchment:   #F7F3EE;
+  --white:       #FFFFFF;
 
-  --r-sm: 8px; --r-md: 14px; --r-lg: 20px; --r-xl: 28px; --r-2xl: 36px;
+  /* Accent */
+  --amber:       #D97706;
+  --amber-lt:    #FEF3C7;
+  --rose:        #E11D48;
+  --rose-lt:     #FFF1F2;
+
+  /* Radii */
+  --r-sm:  8px;
+  --r-md:  12px;
+  --r-lg:  18px;
+  --r-xl:  24px;
+  --r-2xl: 32px;
+
+  /* Shadows */
+  --sh-xs: 0 1px 2px rgba(0,0,0,0.05);
+  --sh-sm: 0 2px 8px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --sh-md: 0 4px 20px rgba(0,0,0,0.08), 0 2px 6px rgba(0,0,0,0.04);
+  --sh-lg: 0 8px 32px rgba(0,0,0,0.10), 0 4px 8px rgba(0,0,0,0.04);
+  --sh-xl: 0 16px 56px rgba(0,0,0,0.13), 0 8px 16px rgba(0,0,0,0.05);
+  --sh-inner: inset 0 1px 3px rgba(0,0,0,0.06);
+
+  /* Typography */
+  --font-ui:   'DM Sans', system-ui, sans-serif;
+  --font-disp: 'Fraunces', Georgia, serif;
+
+  /* Legacy aliases so any residual var() refs still resolve */
+  --moss:      #2D5441;
+  --sage-lt:   #C8DDD3;
+  --linen:     #F7F3EE;
+  --bark:      #6B7280;
+  --bark-lt:   #C8DDD3;
+  --inset:     inset 0 1px 3px rgba(0,0,0,0.06);
 }
 
-body { font-family: 'Inter', system-ui, sans-serif; background: var(--linen); color: var(--ink); -webkit-font-smoothing: antialiased; }
-.serif { font-family: 'Lora', Georgia, serif; }
-button, input, textarea, select { font-family: inherit; }
-::-webkit-scrollbar { display: none; }
+html, body {
+  height: 100%;
+  font-family: var(--font-ui);
+  background: var(--parchment);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  overscroll-behavior: none;
+}
+
+.serif { font-family: var(--font-disp); }
+button, input, textarea, select { font-family: var(--font-ui); }
+
+/* ── Scrollbar ───────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 0; display: none; }
 * { scrollbar-width: none; }
 
-.card {
-  background: var(--cream);
+/* ── Buttons ─────────────────────────────────────────────────── */
+.btn-primary {
+  background: linear-gradient(160deg, var(--pine) 0%, var(--forest) 100%);
+  color: #fff;
+  border: none;
   border-radius: var(--r-lg);
-  border: 1px solid rgba(255,255,255,.85);
-  box-shadow: var(--sh-sm);
-  position: relative; overflow: hidden;
+  font-family: var(--font-ui);
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s;
+  box-shadow: 0 2px 12px rgba(26,48,40,0.3), 0 1px 3px rgba(26,48,40,0.2);
 }
-.card::after {
-  content: ''; position: absolute; inset: 0 0 50% 0;
-  background: linear-gradient(180deg, rgba(255,255,255,.35) 0%, transparent 100%);
-  pointer-events: none; z-index: 1; border-radius: inherit;
+.btn-primary:active { transform: scale(0.97); }
+
+.btn-ghost {
+  background: rgba(255,255,255,0.7);
+  color: var(--charcoal);
+  border: 1px solid rgba(0,0,0,0.08);
+  border-radius: var(--r-md);
+  font-family: var(--font-ui);
+  font-weight: 500;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.15s, box-shadow 0.15s;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+.btn-ghost:hover { background: rgba(255,255,255,0.95); box-shadow: var(--sh-sm); }
+
+/* ── Tab bar ─────────────────────────────────────────────────── */
+.tab-bar {
+  background: rgba(253,252,250,0.82);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid rgba(0,0,0,0.07);
+  box-shadow: 0 -4px 24px rgba(0,0,0,0.06);
 }
 
-.btn-primary {
-  background: linear-gradient(160deg, #4A7050, #2C4E34);
-  color: #fff; border: none; border-radius: 50px; font-weight: 600;
-  cursor: pointer; font-size: 14px;
-  box-shadow: 0 3px 10px rgba(58,94,66,.35), inset 0 1px 0 rgba(255,255,255,.18);
-  transition: transform .15s, box-shadow .15s;
+/* ── Cards ───────────────────────────────────────────────────── */
+.card {
+  background: var(--white);
+  border-radius: var(--r-xl);
+  box-shadow: var(--sh-sm);
+  border: 1px solid rgba(0,0,0,0.04);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
-.btn-primary:active { transform: scale(.97); }
-.btn-ghost {
-  background: rgba(255,255,255,.75); backdrop-filter: blur(8px);
-  color: var(--moss); border: 1.5px solid var(--sage-lt);
-  border-radius: 50px; font-weight: 600; cursor: pointer; transition: all .15s;
-}
-.tab-bar {
-  background: rgba(253,252,248,.92); backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-top: 1px solid rgba(255,255,255,.65);
-  box-shadow: 0 -2px 20px rgba(26,46,30,.07);
+.card:active { transform: scale(0.985); }
+
+/* ── Inputs ──────────────────────────────────────────────────── */
+input, textarea, select {
+  font-family: var(--font-ui);
 }
