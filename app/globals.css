@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,700;1,9..144,300&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
 
 *, *::before, *::after {
   box-sizing: border-box;
@@ -13,48 +13,41 @@ html, body {
 }
 
 :root {
-  --linen:    #F5F0E8;
-  --cream:    #FDFAF4;
-  --walnut:   #8B5E3C;
-  --walnut-dk:#6B4528;
-  --moss:     #5C7A4E;
-  --moss-lt:  #7A9E6A;
-  --forest:   #2D4A2D;
-  --bark:     #C4A882;
-  --bark-lt:  #E8DCC8;
-  --ink:      #1E2A1E;
-  --mist:     #9BAE8F;
-  --shadow:   rgba(45, 30, 15, 0.10);
+  --sage:      #8FAF88;
+  --sage-lt:   #C8DCC4;
+  --sage-pale: #EEF4EC;
+  --forest:    #2A3D2A;
+  --moss:      #4A6741;
+  --bark:      #8C6642;
+  --bark-lt:   #D4B896;
+  --cream:     #FDFBF7;
+  --linen:     #F4F0E6;
+  --parchment: #EDE8DC;
+  --ink:       #1C2B1C;
+  --mist:      #8FA08A;
+  --warm-white:#FEFCF8;
+  --shadow-sm: 0 1px 4px rgba(28,43,28,.07);
+  --shadow-md: 0 4px 16px rgba(28,43,28,.10);
+  --shadow-lg: 0 8px 32px rgba(28,43,28,.13);
+  --r-sm: 10px;
+  --r-md: 16px;
+  --r-lg: 24px;
+  --r-xl: 32px;
 }
 
 body {
-  font-family: 'DM Sans', system-ui, sans-serif;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
   background: var(--linen);
   color: var(--ink);
   -webkit-font-smoothing: antialiased;
 }
 
-/* Woodgrain texture overlay via CSS — diagonal streaks */
-.wood-header {
-  background:
-    repeating-linear-gradient(
-      92deg,
-      transparent,
-      transparent 18px,
-      rgba(255,255,255,0.03) 18px,
-      rgba(255,255,255,0.03) 19px
-    ),
-    repeating-linear-gradient(
-      88deg,
-      transparent,
-      transparent 40px,
-      rgba(0,0,0,0.04) 40px,
-      rgba(0,0,0,0.04) 41px
-    ),
-    linear-gradient(180deg, #3D2810 0%, #4A3318 40%, #3A2510 100%);
-}
+.serif { font-family: 'Fraunces', Georgia, serif; }
 
-.display { font-family: 'Playfair Display', Georgia, serif; }
+button, input, textarea, select { font-family: inherit; }
 
-button { font-family: inherit; }
-input, textarea { font-family: inherit; }
+::-webkit-scrollbar { display: none; }
+* { scrollbar-width: none; }
+
+/* Smooth scroll */
+html { scroll-behavior: smooth; }
