@@ -6,32 +6,57 @@ export async function POST(req) {
 
   if (isUrl) {
     try {
-      const res = await fetch(input, {
-        headers: { "User-Agent": "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)" },
-        signal: AbortSignal.timeout(8000),
-      });
-      const html = await res.text();
+      // Try multiple user agents — some sites block bots but allow browsers
+      const agents = [
+        "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1",
+        "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)",
+        "facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)",
+      ];
+      let html = "";
+      for (const ua of agents) {
+        try {
+          const r = await fetch(input, {
+            headers: { "User-Agent": ua, "Accept": "text/html,application/xhtml+xml,*/*" },
+            signal: AbortSignal.timeout(6000),
+          });
+          if (r.ok) { html = await r.text(); break; }
+        } catch {}
+      }
 
-      // OG image — try multiple patterns
-      const ogImgMatch =
-        html.match(/<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i) ||
-        html.match(/<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:image["']/i) ||
-        html.match(/<meta[^>]+name=["']twitter:image["'][^>]+content=["']([^"']+)["']/i);
-      if (ogImgMatch) ogImage = ogImgMatch[1];
+      if (html) {
+        // OG image — multiple patterns including JSON-LD
+        const patterns = [
+          /<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i,
+          /<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:image["']/i,
+          /<meta[^>]+name=["']twitter:image(?::src)?["'][^>]+content=["']([^"']+)["']/i,
+          /<meta[^>]+content=["']([^"']+)["'][^>]+name=["']twitter:image["']/i,
+          /"thumbnailUrl"\s*:\s*"([^"]+)"/i,
+          /"image"\s*:\s*\{\s*"@type"\s*:\s*"ImageObject"\s*,\s*"url"\s*:\s*"([^"]+)"/i,
+          /"image"\s*:\s*"(https?:\/\/[^"]+\.(?:jpg|jpeg|png|webp)[^"]*)"/i,
+        ];
+        for (const p of patterns) {
+          const m = html.match(p);
+          if (m && m[1] && m[1].startsWith("http")) { ogImage = m[1]; break; }
+        }
 
-      // OG title
-      const ogTitleMatch = html.match(/<meta[^>]+property=["']og:title["'][^>]+content=["']([^"']+)["']/i);
-      if (ogTitleMatch) ogTitle = ogTitleMatch[1];
+        const ogTitleMatch = html.match(/<meta[^>]+property=["']og:title["'][^>]+content=["']([^"']+)["']/i);
+        if (ogTitleMatch) ogTitle = ogTitleMatch[1];
 
-      pageText = html
-        .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, "")
-        .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, "")
-        .replace(/<[^>]+>/g, " ")
-        .replace(/\s+/g, " ")
-        .trim()
-        .slice(0, 5000);
+        pageText = html
+          .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, "")
+          .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, "")
+          .replace(/<[^>]+>/g, " ")
+          .replace(/\s+/g, " ")
+          .trim()
+          .slice(0, 5000);
+      }
     } catch {}
   }
+
+  // If still no image, try Unsplash source as a food photo fallback
+  // (free, no API key needed, returns a relevant food photo)
+  let fallbackImage = "";
+  // We'll generate this after we know the dish title
 
   const context = isUrl
     ? (pageText
@@ -54,16 +79,18 @@ Schema:
   "ingredients": [{ "amount": 2, "unit": "cup", "name": "plain flour" }],
   "steps": [],
   "tags": [],
-  "emoji": ""
+  "emoji": "",
+  "imageSearch": ""
 }
 
 Rules:
 - servings: integer
-- prepTime / cookTime: strings like "15 mins", "1 hour" — omit if unknown
-- ingredients: amount (number, 0 if none), unit (standard abbrev or null for countable), name (stripped of amount/unit)
-- tags: 2-5 lowercase single words: "chicken","dinner","pasta","vegan","quick","vegetarian","dessert","breakfast","soup","salad"
+- prepTime / cookTime: strings like "15 mins", "1 hour"
+- ingredients: amount (number, 0 if none), unit (abbrev or null), name
+- tags: 2-5 lowercase: "chicken","dinner","pasta","vegan","quick","vegetarian","dessert","breakfast","soup","salad"
 - emoji: one emoji for the dish
-- source: site name or platform`;
+- source: site name or platform
+- imageSearch: 2-3 word food photography search term for this dish (e.g. "spaghetti carbonara", "chocolate lava cake", "green curry") — used to find a photo if none available`;
 
   const res = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
@@ -84,7 +111,19 @@ Rules:
 
   try {
     const parsed = JSON.parse(text.replace(/```json|```/g, "").trim());
-    return Response.json({ ok: true, recipe: parsed, ogImage });
+
+    // If no OG image found, use Unsplash source with the dish search term
+    // This is a free CDN-style URL — no API key needed
+    if (!ogImage && parsed.imageSearch) {
+      const q = encodeURIComponent(parsed.imageSearch + " food");
+      fallbackImage = `https://source.unsplash.com/600x400/?${q}`;
+    }
+
+    return Response.json({
+      ok: true,
+      recipe: parsed,
+      ogImage: ogImage || fallbackImage,
+    });
   } catch {
     return Response.json({ ok: false, error: "Parse failed" }, { status: 422 });
   }
